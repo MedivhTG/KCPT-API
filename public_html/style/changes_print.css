@@ -1,0 +1,47 @@
+/* Таблица */
+table {
+    border-collapse: collapse;
+    width: 675px;
+    font-family: Arial;
+    font-size: 10pt;
+    border-bottom: 2px solid black;
+}
+/* Надпись таблицы */
+caption {
+    font-size: 14pt;
+    font-weight: bold;
+}
+/* Заголовки */
+th {
+    border: 2px solid black;
+    padding: 8px;
+    vertical-align: top;
+}
+.h1 {
+    width: 350px;
+}
+.h2 {
+    width: 50px;
+}
+.h3 {
+    width: auto;
+}
+.h4 {
+    width: 180px;
+}
+.h5 {
+    width: 70px;
+}
+/* Тело */
+td {
+    border: 2px solid black;
+}
+tbody {
+    text-align: left;
+}
+.c {
+    border-left: 2px solid black;
+    border-right: 2px solid black;
+    border-top: 0px;
+    border-bottom: 0px;
+}

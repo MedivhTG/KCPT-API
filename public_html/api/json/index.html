@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <!-- Обязательные метатеги -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" >
+
+    <title>Расписание</title>
+  </head>
+  <body>
+    <h1>Расписание</h1>
+
+    <!-- Дополнительный JavaScript; выберите один из двух! -->
+
+    <!-- Вариант 1: Bootstrap в связке с Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" ></script>
+<span id="data">1</span>
+    <!-- Вариант 2: Bootstrap JS отдельно от Popper
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    -->
+  <script>
+// Отправить GET-запрос на сервер
+// Создать элемент select
+
+
+
+let data1;
+
+fetch('http://shed.kcpt72.ru/api/json/classes_json.php')
+  .then(response => response.json())
+  .then(data => {
+    // Обработать полученный объект JavaScript
+   // console.log(data);
+    data1 = data;
+
+    // Создать ссылку в виде кнопки с классами стилей Bootstrap
+    const link = document.getElementById('input1');
+    link.href = '#';
+    link.classList.add('btn', 'btn-primary');
+    link.textContent = 'Выбрать';
+
+    // Создать элемент select с классами стилей Bootstrap
+    const select = document.getElementById('groups1');
+    select.classList.add('form-select', 'form-control');
+
+    // Создать элементы option и добавить их в select
+    data1.forEach(item => {
+      const option = document.createElement('option');
+      option.value = item.ID;
+      option.textContent = item.Name;
+      select.appendChild(option);
+    });
+
+    // Добавить select и ссылку на страницу
+    document.body.appendChild(select);
+    document.body.appendChild(link);
+
+    // Добавить обработчик события для ссылки
+    link.addEventListener('click', () => {
+      const selectedOption = select.options[select.selectedIndex];
+      // Получить элемент input
+      const inputDate = document.querySelector('.form-control');
+
+    // Получить значение даты из элемента input
+    const date = inputDate.value;
+      //alert(`Выбран класс ${selectedOption.textContent} id: ${selectedOption.value} ${date}`);
+
+      creatTable(id=selectedOption.value,data=date);
+
+    });
+  })
+  .catch(error => console.error(error));
+
+
+function creatTable(id,date){
+
+
+  const url = `http://shed.kcpt72.ru/api/json/class_day_json.php?date=${date}&id=${id}`;
+
+  fetch(url)
+  .then(response => response.json())
+  .then(data => {
+    const table = document.getElementById('table1');
+    table.innerHTML = '';
+    const tableHead = document.createElement('thead');
+    const headRow = document.createElement('tr');
+    const headers = ['Урок', 'Фамилия',  'Предмет', 'Кабинет'];//'Имя', 'Отчество',
+    headers.forEach(headerText => {
+      const header = document.createElement('th');
+      const textNode = document.createTextNode(headerText);
+      header.classList.add('text-center');
+      header.appendChild(textNode);
+      headRow.appendChild(header);
+    });
+    tableHead.appendChild(headRow);
+    table.appendChild(tableHead);
+    const tableBody = document.createElement('tbody');
+    data.forEach(item => {
+      const row = document.createElement('tr');
+      const values = ['Урок', 'Фамилия',  'Предмет', 'Кабинет'].map(key => item[key]);//'Имя', 'Отчество',
+      values.forEach(value => {
+        const cell = document.createElement('td');
+        cell.classList.add('align-middle');
+        const textNode = document.createTextNode(value);
+        cell.appendChild(textNode);
+        row.appendChild(cell);
+      });
+      tableBody.appendChild(row);
+    });
+    table.appendChild(tableBody);
+    table.classList.add('table', 'table-striped', 'table-bordered');
+  })
+  .catch(error => console.error(error));
+}
+//     const xhr = new XMLHttpRequest();
+// xhr.onreadystatechange = function() {
+//   if (this.readyState === 4 && this.status === 200) {
+//     document.getElementById("data").innerHTML = this.responseText;
+//   }
+// };
+// xhr.open("GET", "https://shed.kcpt72.ru/api/json/classes_json.php", true);
+// xhr.send();
+  </script>
+<form>
+    <div class="form-group">
+      <label for="inputDate">Введите дату:</label>
+      <input id="calendar1" type="date" class="form-control">
+    </div>
+    <div class="form-group">
+        <label for="inputDate">Выберите группу:</label>
+        <select id="groups1"  class="form-select" aria-label="Default select example"> 
+        </select>
+   
+    <a href="#" id="input1" class="btn btn-primary">Выбрать</a>
+    <table id="table1" class="table table-striped">
+        <thead>
+            <tr>
+                <th>Урок</th>
+                <th>Фамилия</th>
+                <th>Предмет</th>
+                <th>Кабинет</th>
+            </tr>
+        </thead>
+    </table>
+    </div>
+</form>
+
+
+
+
+</body>
+</html>
